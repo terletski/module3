@@ -1,9 +1,9 @@
-// eslint-disable 
+
 const yargs = require("yargs");
 const fs = require("fs");
 const XLSX = require('xlsx');
 const path = "./Notes.json";
-// eslint-enable 
+
 const titleOptions = {
   describe: "Title of note",
   demandOption: true,
@@ -38,8 +38,6 @@ yargs.command("add", "Add a new note",
     addNote(argv);
   }
 )
-  .help()
-  .argv;
 
 yargs.command("list", "List all notes",
 
@@ -48,8 +46,6 @@ yargs.command("list", "List all notes",
     listAllNotes(argv);
   }
 )
-  .help()
-  .argv;
 
 yargs.command("read", "Read a note",
   function (yargs) {
@@ -60,12 +56,10 @@ yargs.command("read", "Read a note",
 
   function (argv) {
     hasFileExist(argv);
-    // hasNoteExist(argv);
+    hasNoteExist(argv);
     readNote(argv);
   }
 )
-  .help()
-  .argv;
 
 yargs.command("remove", "Remove a note",
   function (yargs) {
@@ -76,12 +70,10 @@ yargs.command("remove", "Remove a note",
 
   function (argv) {
     hasFileExist(argv);
-    // hasNoteExist(argv);
+    hasNoteExist(argv);
     removeNote(argv);
   }
 )
-  .help()
-  .argv;
 
 yargs.command("sort", "Sort notes by types",
   function (yargs) {
@@ -95,8 +87,6 @@ yargs.command("sort", "Sort notes by types",
     sortNotes(argv);
   }
 )
-  .help()
-  .argv;
 
 yargs.command("writeToExcel", "Write to exel",
   function (yargs) {
@@ -109,8 +99,6 @@ yargs.command("writeToExcel", "Write to exel",
     writeToExcel();
   }
 )
-  .help()
-  .argv;
 
 yargs.command("readFromExcel", "Read from excel",
   function (yargs) {
@@ -122,8 +110,6 @@ yargs.command("readFromExcel", "Read from excel",
     readFromExcel();
   }
 )
-  .help()
-  .argv;
 
 yargs.command("findAndUpdate", "Find and update note",
   function (yargs) {
@@ -198,7 +184,6 @@ function checkForMatches(argv) {
   const result = jsonFile.filter(function (arr) {
     return arr.title === argv.title;
   });
-
   if (result.length > 1) {
     console.info("But note with title <" + argv.title + "> exists.");
     console.info("Matches found: " + result.length);
@@ -207,9 +192,15 @@ function checkForMatches(argv) {
 
 function hasNoteExist(argv) {
   const jsonFile = require(path);
-  jsonFile.filter(function (arr) {
-    if (arr.title !== argv.title) throw new Error("Note is not found.");
-  });
+  let result = false;
+  jsonFile.forEach(element => {
+    if (element.title === argv.title) {
+      result = true;
+    }
+  })
+  if (!result) {
+    throw new Error("Note wasn't found.");
+  }
 }
 
 function getDate() {
@@ -227,71 +218,71 @@ function getDate() {
 function sortNotes(argv) {
   const jsonFile = require(path);
   //sort by date
-  if (argv.type === "date") {
-    jsonFile.sort(function sortByDate(a, b) {
-      return new Date(b.date) - new Date(a.date);
-    });
-    const result = JSON.stringify(jsonFile, null, "\t");
-    fs.writeFileSync("Notes.json", result, "utf8");
-    console.log(result);
-    console.log("Sorting <" + argv.type + "> completed successfully.");
-  }
-  else if (argv.type === "title lenght") {
+  switch (argv.type) {
+    case 'date':
+      jsonFile.sort(function sortByDate(a, b) {
+        return new Date(b.date) - new Date(a.date);
+      });
+      const result = JSON.stringify(jsonFile, null, "\t");
+      fs.writeFileSync("Notes.json", result, "utf8");
+      console.log(result);
+      console.log("Sorting <" + argv.type + "> completed successfully.");
+      break;
     //sort by title lenght
-    function sortByTitle(a, b) {
-      if (a.title.length < b.title.length)
-        return -1;
-      if (a.title.length > b.title.length)
-        return 1;
-      return 0;
-    }
-    jsonFile.sort(sortByTitle);
-    const result = JSON.stringify(jsonFile, null, "\t");
-    fs.writeFileSync("Notes.json", result, "utf8");
-    console.log("Sorting <" + argv.type + "> completed successfully.");
-  }
-  else if (argv.type === "note lenght") {
+    case 'title lenght':
+      function sortByTitle(a, b) {
+        if (a.title.length < b.title.length)
+          return -1;
+        if (a.title.length > b.title.length)
+          return 1;
+        return 0;
+      }
+      jsonFile.sort(sortByTitle);
+      const result = JSON.stringify(jsonFile, null, "\t");
+      fs.writeFileSync("Notes.json", result, "utf8");
+      console.log("Sorting <" + argv.type + "> completed successfully.");
+      break;
     //sort by note lenght
-    function sortByNote(a, b) {
-      if (a.title.length + a.body.length < b.title.length + b.body.length)
-        return -1;
-      if (a.title.length + a.body.length > b.title.length + b.body.length)
-        return 1;
-      return 0;
-    }
-    jsonFile.sort(sortByNote);
-    const result = JSON.stringify(jsonFile, null, "\t");
-    fs.writeFileSync("Notes.json", result, "utf8");
-    console.log("Sorting <" + argv.type + "> completed successfully.");
-  }
-  else if (argv.type === "alphabetical sorting") {
+    case 'note lenght':
+      function sortByNote(a, b) {
+        if (a.title.length + a.body.length < b.title.length + b.body.length)
+          return -1;
+        if (a.title.length + a.body.length > b.title.length + b.body.length)
+          return 1;
+        return 0;
+      }
+      jsonFile.sort(sortByNote);
+      const result = JSON.stringify(jsonFile, null, "\t");
+      fs.writeFileSync("Notes.json", result, "utf8");
+      console.log("Sorting <" + argv.type + "> completed successfully.");
+      break;
     //alphabetical sorting
-    function alphabeticalSorting(a, b) {
-      if (a.title < b.title)
-        return -1;
-      if (a.title > b.title)
-        return 1;
-      return 0;
-    }
-    jsonFile.sort(alphabeticalSorting);
-    const result = JSON.stringify(jsonFile, null, "\t");
-    fs.writeFileSync("Notes.json", result, "utf8");
-    console.log("Sorting <" + argv.type + "> completed successfully.");
+    case 'alphabetical sorting':
+      function alphabeticalSorting(a, b) {
+        if (a.title < b.title)
+          return -1;
+        if (a.title > b.title)
+          return 1;
+        return 0;
+      }
+      jsonFile.sort(alphabeticalSorting);
+      const result = JSON.stringify(jsonFile, null, "\t");
+      fs.writeFileSync("Notes.json", result, "utf8");
+      console.log("Sorting <" + argv.type + "> completed successfully.");
+      break;
+    default: throw new Error("Incorrect type of sort.");
   }
-  else throw new Error("Incorrect type of sort.");
 }
 
 function writeToExcel() {
   const jsonFile = require(path);
   const wb = XLSX.utils.book_new();
   const string = JSON.stringify(jsonFile);
-  // const result = string.replace('"body":', '"note":');
   const result = string.split('"body":').join('"note":');
   const excel = XLSX.utils.json_to_sheet(JSON.parse(result));
   XLSX.utils.book_append_sheet(wb, excel);
   XLSX.writeFile(wb, "Notes.xlsx");
   console.log("Notes.xlsx was created.");
-  // console.log(typeof wb);
 }
 
 function findAndUpdate(argv) {
