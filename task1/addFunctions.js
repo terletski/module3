@@ -1,7 +1,7 @@
-/*eslint-disable*/
-const fs = require("fs");
-const path = "./Notes.json";
-/* eslint-enable */
+/* eslint-disable indent */
+/* eslint-disable no-unused-expressions */
+const fs = require('fs');
+const path = './Notes.json';
 
 function getDate () {
   // dd/mm/yyyy hh:mm:ss

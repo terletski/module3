@@ -1,9 +1,9 @@
-/*eslint-disable*/
+/* eslint-disable indent */
+/* eslint-disable no-unused-expressions */
 const XLSX = require('xlsx');
-const fs = require("fs");
-const add = require('./addFunctions')
-const path = "./Notes.json";
-/* eslint-enable */
+const fs = require('fs');
+const add = require('./addFunctions');
+const path = './Notes.json';
 
 function writeToExcel () {
   const jsonFile = require(path);
