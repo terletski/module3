@@ -12,6 +12,3 @@ Enter the required command by sample:
 9. node index.js writeToExcel -->  Write to exel
 10. node index.js readFromExcel -->  Read from excel 
 11. node index.js findAndUpdate -t "something" --nt "something"-->  Find and update note by title
-
- 
-
