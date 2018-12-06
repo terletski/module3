@@ -1,11 +1,9 @@
-/* eslint-disable indent */
-/* eslint-disable no-unused-expressions */
-
+/* eslint-disable */
 const request = require('request-promise-native');
 const url = "https://rickandmortyapi.com/api/character";
 
 //get characters 
-function getData () {
+function getData() {
     let result = [];
     const getChars = (url) => request(url, { json: true }).then((body) => {
         result = result.concat(body.results);
@@ -18,7 +16,7 @@ function getData () {
 //get all data
 function search(args) {
     return new Promise((resolve, reject) => {
-        const properties = getProperties (args);
+        const properties = getProperties(args);
         getData().then((data) => {
             const chars = data.map((element) => {
                 let flag = true;
@@ -50,7 +48,7 @@ function search(args) {
     })
 }
 
-function getProperties (args) {
+function getProperties(args) {
     const result = [];
     //availiable parameters for search 
     const properties = ['id', 'name', 'species', 'status', 'type', 'gender', 'origin', 'location', 'episode'];
@@ -63,7 +61,7 @@ function getProperties (args) {
 }
 //remove empty elements from array
 function filterResult(arr) {
-    return arr.filter((element) => element !== undefined)
+    return arr.filter((element) => element !== undefined);
 }
 
 module.exports = {
