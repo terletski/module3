@@ -98,7 +98,6 @@ yargs.command('writeToExcel', 'Write to exel',
   },
 
   function () {
-    basic.hasFileExist();
     excel.writeToExcel();
   }
 );

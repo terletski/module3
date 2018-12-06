@@ -6,6 +6,7 @@ const add = require('./addFunctions');
 const path = './Notes.json';
 
 function writeToExcel () {
+  if (fs.existsSync(path)) {
   const jsonFile = require(path);
   const wb = XLSX.utils.book_new();
   const string = JSON.stringify(jsonFile);
@@ -14,6 +15,7 @@ function writeToExcel () {
   XLSX.utils.book_append_sheet(wb, excel);
   XLSX.writeFile(wb, 'Notes.xlsx');
   console.log('Notes.xlsx was created.');
+  } else checkingForJsonExistance();
 }
 
 function findAndUpdate (argv) {
@@ -40,6 +42,14 @@ function readFromExcel () {
   } else throw new Error('Notes.xlsx file not found.');
 }
 
-module.exports.writeToExcel = writeToExcel;
-module.exports.findAndUpdate = findAndUpdate;
-module.exports.readFromExcel = readFromExcel;
+function checkingForJsonExistance () {
+  const note = JSON.stringify([], null, '\t');
+    fs.writeFileSync(path, note, 'utf8');
+    console.log('Notes.json was created, add notes.');
+}
+
+module.exports = {
+  writeToExcel,
+  findAndUpdate,
+  readFromExcel
+};

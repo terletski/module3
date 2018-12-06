@@ -17,16 +17,19 @@ yargs
     })
     .argv;
 
+fs.existsSync('./result') || fs.mkdirSync('./result');
+
 get.search(yargs).then((data, err) => {
     if (err) console.log(err);
     const result = get.filterResult(data);
     if (result.length > 0) {
         fs.writeFileSync(`result.json`, JSON.stringify(result, null, '\t'));
         console.log(result);
-        console.log('result.json was created.')
+        console.log('result.json was created.');
     }
     else console.log(`No matches found.`);
 })
+
 
 
 

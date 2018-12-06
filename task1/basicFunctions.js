@@ -80,10 +80,12 @@ function hasNoteExist (argv) {
   }
 }
 
-module.exports.addNote = addNote;
-module.exports.listAllNotes = listAllNotes;
-module.exports.readNote = readNote;
-module.exports.removeNote = removeNote;
-module.exports.hasFileExist = hasFileExist;
-module.exports.hasNoteExist = hasNoteExist;
-module.exports.checkForMatches = checkForMatches;
+module.exports = {
+  addNote,
+  listAllNotes,
+  readNote,
+  removeNote,
+  hasFileExist,
+  hasNoteExist,
+  checkForMatches
+};

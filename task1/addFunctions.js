@@ -73,6 +73,8 @@ function getJson () {
   return result;
 }
 
-module.exports.getJson = getJson;
-module.exports.getDate = getDate;
-module.exports.sortNotes = sortNotes;
+module.exports = {
+  getJson,
+  getDate,
+  sortNotes
+};
