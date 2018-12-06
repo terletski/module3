@@ -1,9 +1,7 @@
-/* eslint-disable indent */
-/* eslint-disable no-unused-expressions */
-const yargs = require('yargs');
-const fs = require('fs');
-const request = require('request-promise-native');
-const url = 'https://rickandmortyapi.com/api/character';
+/* eslint-disable */
+const yargs = require("yargs");
+const fs = require("fs");
+const get = require('./getData');
 
 yargs
     .command('choose <parameters> for searching characters')
@@ -19,73 +17,16 @@ yargs
     })
     .argv;
 
-search(yargs).then((data, err) => {
+get.search(yargs).then((data, err) => {
     if (err) console.log(err);
-    const result = filterResult(data);
+    const result = get.filterResult(data);
     if (result.length > 0) {
         fs.writeFileSync(`result.json`, JSON.stringify(result, null, '\t'));
         console.log(result);
-        console.log('result.json was created.');
-    } else console.log(`No matches found.`);
-});
-// get characters
-function getData () {
-    let result = [];
-    const getChars = (url) => request(url, { json: true }).then((body) => {
-        result = result.concat(body.results);
-        if (body.info.next !== '') {
-            return getChars(body.info.next);
-        } else return result;
-    });
-    return getChars(url);
-}
-// get all data
-function search (args) {
-    return new Promise((resolve, reject) => {
-        const properties = getProperties(args);
+        console.log('result.json was created.')
+    }
+    else console.log(`No matches found.`);
+})
 
-        getData().then((data) => {
-            const chars = data.map((element) => {
-                let flag = true;
-                for (let i = 0; i < properties.length; i++) {
-                    // "origin" and "location" parameters are objects
-                    if (properties[i] === 'origin' || properties[i] === 'location') {
-                        if (element[properties[i]].name.indexOf(args[properties[i]]) === -1) {
-                            flag = false;
-                            break;
-                        }
-                    } else if (properties[i] === 'id') {
-                        if (element.id !== args['id']) {
-                            flag = false;
-                        }
-                    } else {
-                        if (element[properties[i]].indexOf(args[properties[i]]) === -1) {
-                            flag = false;
-                            break;
-                        }
-                    }
-                }
-                if (flag === true) {
-                    return element;
-                }
-            });
-            resolve(chars);
-        }).catch((err) => { reject(err); });
-    });
-}
 
-function getProperties (args) {
-    const result = [];
-    // availiable parameters for search
-    const properties = ['id', 'name', 'species', 'status', 'type', 'gender', 'origin', 'location', 'episode'];
-    // get keys from command arguments
-    Object.keys(args).forEach((element) => {
-        if (properties.includes(element)) result.push(element);
-    });
-    if (result.length > 1) throw new Error('invalid parameters.');
-    return result;
-}
-// remove empty elements from array
-function filterResult (arr) {
-    return arr.filter((element) => element !== undefined);
-}
+
