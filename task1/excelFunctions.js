@@ -46,7 +46,7 @@ function checkingForJsonExistance (path) {
   const note = JSON.stringify([], null, '\t');
     fs.writeFileSync(path, note, 'utf8');
     console.log('Notes.json is not found.');
-    console.log('Notes.json was created, but add a note before converting.');
+    console.log('Notes.json was created, but add a note before converting to excel.');
 }
 
 module.exports = {
