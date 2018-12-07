@@ -15,7 +15,7 @@ function writeToExcel () {
   XLSX.utils.book_append_sheet(wb, excel);
   XLSX.writeFile(wb, 'Notes.xlsx');
   console.log('Notes.xlsx was created.');
-  } else checkingForJsonExistance();
+  } else checkingForJsonExistance(path);
 }
 
 function findAndUpdate (argv) {
@@ -42,10 +42,11 @@ function readFromExcel () {
   } else throw new Error('Notes.xlsx file not found.');
 }
 
-function checkingForJsonExistance () {
+function checkingForJsonExistance (path) {
   const note = JSON.stringify([], null, '\t');
     fs.writeFileSync(path, note, 'utf8');
-    console.log('Notes.json was created, add notes.');
+    console.log('Notes.json is not found.');
+    console.log('Notes.json was created, but add a note before converting.');
 }
 
 module.exports = {
