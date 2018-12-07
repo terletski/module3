@@ -1,4 +1,3 @@
-/* eslint-disable */
 const request = require('request-promise-native');
 const url = "https://rickandmortyapi.com/api/character";
 
@@ -28,7 +27,7 @@ function search(args) {
                             break;
                         }
                     } else if (properties[i] === 'id') {
-                        if (ellement.id !== args['id']) {
+                        if (element.id !== args['id']) {
                             flag = false;
                         }
                     }
